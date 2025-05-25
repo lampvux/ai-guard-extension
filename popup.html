@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Guard</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="popup-container">
+        <header>
+            <img src="icons/icon48.png" alt="AI Guard" class="logo">
+            <h1>AI Guard</h1>
+        </header>
+
+        <div class="status-section">
+            <div class="status-item">
+                <span class="status-icon" id="linkStatus">✓</span>
+                <span class="status-text">Link Protection: <strong id="linkStatusText">Active</strong></span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon" id="aiStatus">✓</span>
+                <span class="status-text">AI Detection: <strong id="aiStatusText">Active</strong></span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="openOptions" class="btn btn-primary">
+                <span class="btn-icon">⚙️</span>
+                Settings
+            </button>
+            <button id="refreshPage" class="btn btn-secondary">
+                <span class="btn-icon">🔄</span>
+                Refresh Page
+            </button>
+        </div>
+
+        <footer>
+            <p>Protecting your search results</p>
+        </footer>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

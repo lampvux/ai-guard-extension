@@ -1,0 +1,89 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: |
+        npm install -g terser html-minifier-terser
+        
+    - name: Create build directory
+      run: mkdir -p build
+      
+    - name: Copy and minify JavaScript files
+      run: |
+        terser content.js --compress --mangle --output build/content.js
+        terser background.js --compress --mangle --output build/background.js
+        terser warning.js --compress --mangle --output build/warning.js
+        terser popup.js --compress --mangle --output build/popup.js
+        terser options.js --compress --mangle --output build/options.js
+        
+    - name: Copy and minify HTML files
+      run: |
+        html-minifier-terser --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true popup.html -o build/popup.html
+        html-minifier-terser --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true options.html -o build/options.html
+        html-minifier-terser --collapse-whitespace --remove-comments --remove-optional-tags --remove-redundant-attributes --remove-script-type-attributes --remove-tag-whitespace --use-short-doctype --minify-css true --minify-js true icon-generator.html -o build/icon-generator.html
+        
+    - name: Copy CSS files
+      run: |
+        cp content.css build/
+        cp popup.css build/
+        cp options.css build/
+        
+    - name: Copy manifest and other required files
+      run: |
+        cp manifest.json build/
+        cp LICENSE build/
+        cp README.md build/
+        
+    - name: Copy icons directory
+      run: |
+        cp -r icons build/
+        
+    - name: Create release zip
+      run: |
+        cd build
+        zip -r ../ai-guard-extension-release.zip .
+        cd ..
+        
+    - name: Get version from tag
+      id: get_version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        else
+          echo "version=dev-$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ai-guard-extension-${{ steps.get_version.outputs.version }}
+        path: ai-guard-extension-release.zip
+        
+    - name: Create Release (if tag)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ai-guard-extension-release.zip
+        name: AI Guard Extension ${{ steps.get_version.outputs.version }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

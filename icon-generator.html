@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Guard Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .icon-preview {
+            text-align: center;
+        }
+
+        canvas {
+            border: 1px solid #ddd;
+            margin: 10px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>AI Guard Icon Generator</h1>
+
+        <div class="canvas-container" id="canvasContainer"></div>
+
+        <button onclick="downloadAllIcons()">Download All Icons</button>
+
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Click "Download All Icons" to generate and download all icon sizes</li>
+                <li>Extract the downloaded icons to the "icons" folder in your extension directory</li>
+                <li>The icons will be named: icon16.png, icon32.png, icon48.png, and icon128.png</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const sizes = [16, 32, 48, 128];
+        const canvases = {};
+
+        // Initialize canvases
+        sizes.forEach(size => {
+            const container = document.createElement('div');
+            container.className = 'icon-preview';
+
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            canvas.id = `canvas${size}`;
+
+            const label = document.createElement('p');
+            label.textContent = `${size}x${size}`;
+
+            container.appendChild(canvas);
+            container.appendChild(label);
+            document.getElementById('canvasContainer').appendChild(container);
+
+            canvases[size] = canvas;
+            drawIcon(canvas, size);
+        });
+
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+
+            // Draw rounded rectangle background
+            const radius = size * 0.2;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Draw shield icon
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.06;
+
+            // Shield path
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const shieldWidth = size * 0.5;
+            const shieldHeight = size * 0.6;
+
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY - shieldHeight * 0.4);
+            ctx.lineTo(centerX - shieldWidth / 2, centerY - shieldHeight * 0.2);
+            ctx.lineTo(centerX - shieldWidth / 2, centerY + shieldHeight * 0.1);
+            ctx.quadraticCurveTo(centerX - shieldWidth / 2, centerY + shieldHeight * 0.4, centerX, centerY + shieldHeight * 0.5);
+            ctx.quadraticCurveTo(centerX + shieldWidth / 2, centerY + shieldHeight * 0.4, centerX + shieldWidth / 2, centerY + shieldHeight * 0.1);
+            ctx.lineTo(centerX + shieldWidth / 2, centerY - shieldHeight * 0.2);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw AI symbol (simplified brain/circuit pattern)
+            ctx.fillStyle = 'white';
+            const dotSize = size * 0.04;
+
+            // Center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, dotSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Connection lines
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.02;
+
+            // Draw simple connections
+            const positions = [
+                { x: centerX - shieldWidth * 0.25, y: centerY },
+                { x: centerX + shieldWidth * 0.25, y: centerY },
+                { x: centerX, y: centerY - shieldHeight * 0.15 },
+                { x: centerX, y: centerY + shieldHeight * 0.15 }
+            ];
+
+            positions.forEach(pos => {
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, dotSize * 0.7, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function downloadIcon(canvas, size) {
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function downloadAllIcons() {
+            // Create a delay between downloads to ensure all files are saved
+            let delay = 0;
+            sizes.forEach(size => {
+                setTimeout(() => {
+                    downloadIcon(canvases[size], size);
+                }, delay);
+                delay += 200;
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Guard Settings</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <img src="icons/icon48.png" alt="AI Guard" class="logo">
+            <h1>AI Guard Settings</h1>
+            <p class="subtitle">Protect yourself from malicious links and AI-generated content</p>
+        </header>
+
+        <main>
+            <section class="settings-section">
+                <h2>Protection Features</h2>
+
+                <div class="setting-item">
+                    <div class="setting-header">
+                        <label class="switch">
+                            <input type="checkbox" id="linkProtection" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <div class="setting-info">
+                            <h3>Link Protection</h3>
+                            <p>Verify that search result links match their displayed URLs and detect suspicious patterns
+                            </p>
+                        </div>
+                    </div>
+                    <div class="setting-details">
+                        <h4>What it detects:</h4>
+                        <ul>
+                            <li>Domain mismatches between displayed and actual URLs</li>
+                            <li>URL shorteners that could hide malicious destinations</li>
+                            <li>Suspicious patterns like IP addresses or punycode domains</li>
+                            <li>Homograph attacks using lookalike characters</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-header">
+                        <label class="switch">
+                            <input type="checkbox" id="aiDetection" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <div class="setting-info">
+                            <h3>AI Content Detection</h3>
+                            <p>Identify potentially AI-generated content in search results</p>
+                        </div>
+                    </div>
+                    <div class="setting-details">
+                        <h4>Detection indicators:</h4>
+                        <ul>
+                            <li>Common AI language patterns and phrases</li>
+                            <li>Repetitive sentence structures</li>
+                            <li>Overly formal or consistent tone</li>
+                            <li>Lack of contractions and perfect grammar</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2>About AI Guard</h2>
+                <div class="about-content">
+                    <p>AI Guard helps you browse more safely by:</p>
+                    <ul>
+                        <li>Protecting you from phishing and malware links in search results</li>
+                        <li>Identifying AI-generated content that might be misleading</li>
+                        <li>Providing real-time security indicators while you search</li>
+                    </ul>
+                    <p class="version">Version 1.0.0</p>
+                </div>
+            </section>
+
+            <div class="save-status" id="saveStatus"></div>
+        </main>
+
+        <footer>
+            <p>© 2024 AI Guard Extension. Keep browsing safely!</p>
+        </footer>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+
+</html>
